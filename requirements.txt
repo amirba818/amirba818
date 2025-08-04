@@ -1,0 +1,11 @@
+# Professional Calculator Requirements
+# Standard library modules only - no additional installations needed
+# tkinter (included with Python)
+# math (built-in)
+# sys (built-in)
+# re (built-in)
+# typing (built-in for Python 3.5+)
+
+# Optional: For enhanced GUI themes (not required)
+# pillow>=8.0.0  # For better image handling if needed
+# matplotlib>=3.0.0  # For potential graphing features
