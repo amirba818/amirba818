@@ -1,0 +1,89 @@
+# دستورات Hashcat بهینه شده برای RTX 4090
+# Target: hasanzade wallet (3.00235583 BTC)
+
+# 🔥 دستور پیشنهادی برای شروع (7 کاراکتر):
+hashcat -m 11300 -a 3 hasanzade_wallet.hash ?l?l?l?l?l?l?l \
+  -w 4 -O --force \
+  --gpu-temp-abort=85 --gpu-temp-retain=78 \
+  --status --status-timer=15 \
+  --session=hasanzade_7char \
+  --potfile-disable
+
+# 🚀 برای 8 کاراکتر (اگر 7 کاراکتر نتیجه نداد):
+hashcat -m 11300 -a 3 hasanzade_wallet.hash ?l?l?l?l?l?l?l?l \
+  -w 4 -O --force \
+  --gpu-temp-abort=85 --gpu-temp-retain=78 \
+  --status --status-timer=15 \
+  --session=hasanzade_8char \
+  --potfile-disable
+
+# 📊 تقسیم 8 کاراکتر به بخش‌های کوچک‌تر:
+
+# بخش 1: شروع با a-f
+hashcat -m 11300 -a 3 hasanzade_wallet.hash -1 abcdef ?1?l?l?l?l?l?l?l \
+  -w 4 -O --session=hasanzade_8char_part1
+
+# بخش 2: شروع با g-l  
+hashcat -m 11300 -a 3 hasanzade_wallet.hash -1 ghijkl ?1?l?l?l?l?l?l?l \
+  -w 4 -O --session=hasanzade_8char_part2
+
+# بخش 3: شروع با m-r
+hashcat -m 11300 -a 3 hasanzade_wallet.hash -1 mnopqr ?1?l?l?l?l?l?l?l \
+  -w 4 -O --session=hasanzade_8char_part3
+
+# بخش 4: شروع با s-z
+hashcat -m 11300 -a 3 hasanzade_wallet.hash -1 stuvwxyz ?1?l?l?l?l?l?l?l \
+  -w 4 -O --session=hasanzade_8char_part4
+
+# 💡 اگر pattern خاصی یادتونه:
+
+# شروع با "h" (hasanzade!)
+hashcat -m 11300 -a 3 hasanzade_wallet.hash h?l?l?l?l?l?l?l \
+  -w 4 -O --session=hasanzade_h_start
+
+# شروع با "a"  
+hashcat -m 11300 -a 3 hasanzade_wallet.hash a?l?l?l?l?l?l?l \
+  -w 4 -O --session=hasanzade_a_start
+
+# شروع با "m"
+hashcat -m 11300 -a 3 hasanzade_wallet.hash m?l?l?l?l?l?l?l \
+  -w 4 -O --session=hasanzade_m_start
+
+# اگر ترکیب حروف و اعداد:
+hashcat -m 11300 -a 3 hasanzade_wallet.hash ?l?l?l?l?d?d?d?d \
+  -w 4 -O --session=hasanzade_letters_numbers
+
+# 🔄 ادامه session متوقف شده:
+hashcat --session=hasanzade_7char --restore
+
+# 👀 نمایش نتیجه (اگر پیدا شد):
+hashcat -m 11300 hasanzade_wallet.hash --show
+
+# 📈 مانیتورینگ پیشرفت:
+watch -n 5 'hashcat --session=hasanzade_7char --status'
+
+# 🧹 پاک کردن session:
+rm -f hasanzade_*.restore
+rm -f hasanzade_*.log
+
+# ⚡ تنظیمات GPU حین اجرا:
+# در ترمینال جداگانه:
+watch -n 1 nvidia-smi
+
+# تنظیم فن به حداکثر:
+sudo nvidia-settings -a [gpu:0]/GPUFanControlState=1
+sudo nvidia-settings -a [fan:0]/GPUTargetFanSpeed=100
+
+# 📋 تخمین زمان:
+# 7 کاراکتر: ~8.0B ترکیب / 2M H/s = ~1.1 ساعت  
+# 8 کاراکتر: ~208B ترکیب / 2M H/s = ~29 ساعت
+
+# 🎯 بهترین استراتژی:
+# 1. ابتدا 7 کاراکتر را کامل تست کنید
+# 2. اگر نتیجه نداد، 8 کاراکتر را به 4 بخش تقسیم کنید  
+# 3. اگر pattern یادتونه، از اون استفاده کنید
+
+# 🚨 هشدار امنیتی:
+# - همیشه backup از wallet داشته باشید
+# - روی سیستم offline کار کنید
+# - پس از پیدا کردن رمز، فوراً انتقال دهید
